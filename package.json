@@ -10,7 +10,7 @@
     "generate-routes": "tsr generate",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "srvx --prod -s dist/client dist/server/server.js",
+    "start": "srvx serve --prod --dir . --static dist/client --entry dist/server/server.js",
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
