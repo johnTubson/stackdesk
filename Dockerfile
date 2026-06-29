@@ -24,4 +24,4 @@ RUN mkdir -p data && pnpm build
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "pnpm db:migrate && pnpm db:seed && pnpm preview --host 0.0.0.0 --port ${PORT:-3000}"]
+CMD ["sh", "-c", "pnpm db:migrate && pnpm db:seed && pnpm start"]
