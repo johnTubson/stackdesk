@@ -1,0 +1,45 @@
+# Production compose for VPS. Render uses Dockerfile + render.yaml instead.
+# Usage:
+#   cp .env.production.example .env.production   # edit SESSION_SECRET
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# With HTTPS (requires a domain pointing at the VM):
+#   docker compose -f docker-compose.prod.yml --profile https up -d --build
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3000
+    volumes:
+      - stackdesk-data:/app/data
+    expose:
+      - "3000"
+    ports:
+      # Direct HTTP access on port 3000 (disable when using the https profile)
+      - "3000:3000"
+
+  caddy:
+    profiles: [https]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env.production for HTTPS}
+    volumes:
+      - ./deploy/oracle/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+volumes:
+  stackdesk-data:
+  caddy-data:
+  caddy-config:

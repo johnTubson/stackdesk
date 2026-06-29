@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: file:./data/local.db
+      SESSION_SECRET: docker-demo-change-me
+      HOST: 0.0.0.0
+      PORT: 3000
+    volumes:
+      - stackdesk-data:/app/data
+
+volumes:
+  stackdesk-data:
